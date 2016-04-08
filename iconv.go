@@ -38,8 +38,8 @@ func Open(toCode, fromCode string) (*Handle, error) {
 	cFromCode := C.CString(fromCode)
 	h, err := C.iconv_cgo_open(cToCode, cFromCode)
 	if h == nil {
-		C.free(cToCode)
-		C.free(cFromCode)
+		C.free(unsafe.Pointer(cToCode))
+		C.free(unsafe.Pointer(cFromCode))
 		return nil, err
 	}
 	return &Handle{h}, nil
