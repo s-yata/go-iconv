@@ -124,6 +124,24 @@ func TestLong(t *testing.T) {
 	}
 }
 
+// TestInvalid tests an invalid sequence.
+func TestInvalid(t *testing.T) {
+	h, err := Open("UTF-8", "CP932")
+	if err != nil {
+		t.Skipf("Open failed: %v", err)
+	}
+	defer func() {
+		if err := h.Close(); err != nil {
+			t.Fatalf("Close failed: %v", err)
+		}
+	}()
+
+	src := []byte{133, 150}
+	_, err = h.ConvUnsafe(src)
+	if err == nil {
+		t.Fatalf("ConvUnsafe wrongly succeeded: src = %#v")
+	}
+}
 // TestIgnore tests //IGNORE.
 func TestIgnore(t *testing.T) {
 	h, err := Open("UTF-8//IGNORE", "CP932")
