@@ -193,6 +193,7 @@ static int iconv_cgo_conv_last(iconv_cgo_h h, char **out, size_t *out_size) {
   if (errno == E2BIG) {
     /* Extend an internal buffer and output the remaining. */
     size_t offset = h->buf_size - *out_size;
+    errno = 0;
     if (iconv_cgo_realloc(h) == -1) {
       return -1;
     }
@@ -230,6 +231,7 @@ static int iconv_cgo_conv_core(iconv_cgo_h h, char *in, size_t in_size,
     if (errno == E2BIG) {
       /* Extend an internal buffer and convert the remaining. */
       size_t offset = h->buf_size - out_size_left;
+      errno = 0;
       if (iconv_cgo_realloc(h) == -1) {
         break;
       }
@@ -242,10 +244,12 @@ static int iconv_cgo_conv_core(iconv_cgo_h h, char *in, size_t in_size,
     }
     if (errno == EILSEQ) {
       /* Skip an invalid multibyte sequence. */
+      errno = 0;
       in_left++;
       in_size_left--;
     } else if (errno == EINVAL) {
       /* Ignore an incomplete multibyte sequence. */
+      errno = 0;
       result = iconv_cgo_conv_last(h, &out_left, &out_size_left);
       break;
     } else {
