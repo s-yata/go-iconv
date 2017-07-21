@@ -139,7 +139,7 @@ func TestInvalid(t *testing.T) {
 	src := []byte{133, 150}
 	_, err = h.ConvUnsafe(src)
 	if err == nil {
-		t.Fatalf("ConvUnsafe wrongly succeeded: src = %#v")
+		t.Fatalf("ConvUnsafe wrongly succeeded: src = %#v", err)
 	}
 }
 
