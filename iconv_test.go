@@ -8,40 +8,40 @@ import (
 
 // TestConv tests a simple conversion.
 func TestSimple(t *testing.T) {
-	utf8_to_cp932, err := Open("cp932", "utf-8")
+	utf8ToCP932, err := Open("cp932", "utf-8")
 	if err != nil {
 		t.Fatalf("Open failed: %v", err)
 	}
 	defer func() {
-		if err := utf8_to_cp932.Close(); err != nil {
+		if err := utf8ToCP932.Close(); err != nil {
 			t.Fatalf("Close failed: %v", err)
 		}
 	}()
 
-	utf8_str := "あいうえお"
-	cp932, err := utf8_to_cp932.Conv([]byte(utf8_str))
+	utf8Str := "あいうえお"
+	cp932, err := utf8ToCP932.Conv([]byte(utf8Str))
 	if err != nil {
-		t.Fatalf("Conv failed: utf8_str = %#v: %v", utf8_str, err)
+		t.Fatalf("Conv failed: utf8_str = %#v: %v", utf8Str, err)
 	}
 
-	cp932_to_utf8, err := Open("UTF-8", "CP932")
+	cp932ToUTF8, err := Open("UTF-8", "CP932")
 	if err != nil {
 		t.Fatalf("Open failed: %v", err)
 	}
 	defer func() {
-		if err := cp932_to_utf8.Close(); err != nil {
+		if err := cp932ToUTF8.Close(); err != nil {
 			t.Fatalf("Close failed: %v", err)
 		}
 	}()
 
-	utf8, err := cp932_to_utf8.Conv(cp932)
+	utf8, err := cp932ToUTF8.Conv(cp932)
 	if err != nil {
-		t.Fatalf("Conv failed: utf8_str = %#v: %v", utf8_str, err)
+		t.Fatalf("Conv failed: utf8_str = %#v: %v", utf8Str, err)
 	}
 
-	if string(utf8) != utf8_str {
+	if string(utf8) != utf8Str {
 		t.Fatalf("unreversible conversion: dest = %#v, src = %#v",
-			utf8_str, string(utf8))
+			utf8Str, string(utf8))
 	}
 }
 
@@ -142,6 +142,7 @@ func TestInvalid(t *testing.T) {
 		t.Fatalf("ConvUnsafe wrongly succeeded: src = %#v")
 	}
 }
+
 // TestIgnore tests //IGNORE.
 func TestIgnore(t *testing.T) {
 	h, err := Open("UTF-8//IGNORE", "CP932")
